@@ -28,14 +28,15 @@ resource "aws_autoscaling_group" "example" {
   # target_group_arns           = ["arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-targets/73e2d6bc24d8a067"]
 
   # Optional: Tags
-  tags = [
-    {
-      key                 = "Name"
-      value               = "example-asg"
+    dynamic "tag" {
+    for_each = local.asg_tags
+    content {
+      key                 = tag.key
+      value               = tag.value
       propagate_at_launch = true
-    },
-  ]
-}
+    }
+  }
+
 
 # Optional: Define Scaling Policies
 resource "aws_autoscaling_policy" "scale_up" {
